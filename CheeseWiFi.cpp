@@ -6,11 +6,15 @@ char* CheeseWiFi::password = "pass";
 
 void CheeseWiFi::init() {
   Serial.println("\n");
-  Serial.println("init_wifi: start with login "+String(ssid));
+  Serial.println("init_wifi: start with login " + String(ssid));
   WiFi.begin(ssid, password);
+  Serial.println("");
+  int cnt = 0;
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.println(".");
+    if (++cnt % 100 == 0)
+      Serial.println("");
+    Serial.print(".");
   }
 
   Serial.println("Our IP: ");

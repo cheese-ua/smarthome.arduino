@@ -1,15 +1,10 @@
 #include <ESP8266WiFi.h>
-#include "wifi.h"
+#include "CheeseWiFi.h"
 
-char* MyWiFi::ssid = "login";
-char* MyWiFi::password = "pass";
+char* CheeseWiFi::ssid = "login";
+char* CheeseWiFi::password = "pass";
 
-WiFiServer MyWiFi::server(80);
-
-MyWiFi::MyWiFi() {
-
-}
-void MyWiFi::init_wifi() {
+void CheeseWiFi::init() {
   Serial.println("\n");
   Serial.println("init_wifi: start with login "+String(ssid));
   WiFi.begin(ssid, password);
@@ -17,7 +12,7 @@ void MyWiFi::init_wifi() {
     delay(500);
     Serial.println(".");
   }
-  server.begin();
+
   Serial.println("Our IP: ");
   Serial.println(WiFi.localIP());
   Serial.println("init_wifi: end");

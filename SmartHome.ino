@@ -1,43 +1,20 @@
 #include <Wire.h>
-#include "dht11.h"
-#include "wifi.h"
+#include "CheeseDHT11.h"
+#include "CheeseWiFi.h"
+#include "CheeseUtilites.h"
 #include "secure.h"
+#include <ESP8266WebServer.h>
 #include <LiquidCrystal_I2C.h>
 
+ESP8266WebServer server(80);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-const int pinPhoto = A0;
 long counter = 0;
-int leds[] = {12, 13, 15};
-
-
-void printTemp(int pin, String name, WiFiClient client) {
-  ResponseDHT11 resp = MyDHT11::getTemp(pin);
-
-  if (resp.temperature<0) {
-    client.print("{\"pin\":");
-    client.print(pin);
-    client.print(",\"name\":\"");
-    client.print(name);
-    client.print("\",\"error\":\"Read failed\"}");
-    return;
-  }
-
-  client.print("{\"pin\":");
-  client.print(pin);
-  client.print(",\"name\":\"");
-  client.print(name);
-  client.print("\",\"t\":");
-  client.print(resp.temperature);
-  client.print(",\"h\":");
-  client.print(resp.humidity);
-  client.print("}");
-}
 
 void printTempOnLCD(int pin, int line) {
-  ResponseDHT11 resp = MyDHT11::getTemp(pin);
+  ResponseDHT11 resp = CheeseDHT11::get(pin);
 
-  if (resp.temperature<0) {
+  if (resp.temperature < 0) {
     lcd.setCursor(0, line);
     String lineUp = "T: Err    H: Err";
     lcd.print(lineUp);
@@ -49,15 +26,28 @@ void printTempOnLCD(int pin, int line) {
   lcd.print(lineUp);
 }
 
-void printPhoto(WiFiClient client) {
-  client.print("{\"pin\":");
-  client.print(pinPhoto);
-  client.print(",\"val\":");
-  int raw = analogRead( pinPhoto );
-  client.print(raw);
-  client.print("}");
+void handleJson() {
+  String html = "{\"mfs\":\"" +  GetTimeFromStart()
+                +  "\",\n\"temp\"=[" +  CheeseDHT11::toJSON(14, "down")
+                + "," +  CheeseDHT11::toJSON(0, "up") +  "]}";
+  server.send(200, "application/json", html);
 }
 
+
+void handleNotFound() {
+  String message = "File Not Found\n\n";
+  message += "URI: ";
+  message += server.uri();
+  message += "\nMethod: ";
+  message += (server.method() == HTTP_GET) ? "GET" : "POST";
+  message += "\nArguments: ";
+  message += server.args();
+  message += "\n";
+  for (uint8_t i = 0; i < server.args(); i++) {
+    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
+  }
+  server.send(404, "text/plain", message);
+}
 /***********************************************/
 void setup() {
   init_secure();
@@ -65,64 +55,30 @@ void setup() {
   Serial.println("\nsetup: start");
 
   Wire.begin(4, 5);
-  lcd.init();           
   lcd.init();
   lcd.backlight();
 
-  MyWiFi::init_wifi();
+  server.on("/json", handleJson);
+  server.onNotFound(handleNotFound);
 
-  pinMode( pinPhoto, INPUT);
-  for (int i = 0; i < 3; i++) {
-    pinMode( leds[i], OUTPUT);
-    digitalWrite( leds[i], LOW);
-  }
+  server.begin();
+  Serial.println("HTTP server started");
+
+  CheeseWiFi::init();
 }
 
-void ledOn(int pin) {
-  for (int i = 0; i < 3; i++) {
-    digitalWrite( leds[i], LOW);
-    Serial.printf("Led %d off\n", leds[i]);
-  }
-  Serial.printf("Led %d on\n", leds[pin]);
-  digitalWrite( leds[pin], HIGH);
-}
-
-String GetTimeFromStart() {
-  float minutes = (float) millis() / 1000.0 ;
-  return "";
-}
 
 /***********************************************/
 void loop() {
-  if(++counter % 100 == 0){
-    Serial.println("LCD start");
-    printTempOnLCD(14,1);
+  server.handleClient();
+
+  if (++counter % 100 == 0) {
+    Serial.print("LCD update: ");
+    Serial.println(GetTimeFromStart());
+    printTempOnLCD(14, 1);
     printTempOnLCD(0, 0);
     delay(500);
-  }else{
+  } else {
     delay(50);
   }
-  WiFiClient client = MyWiFi::server.available();
-  if (!client) {
-    return;
-  }
-  Serial.print("Loop ");
-  Serial.println(millis());
-
-  while (!client.available()) {
-    delay(1);
-  }
-  ledOn(++counter % 3);
-  String html = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n";
-  client.print(html);
-
-  client.print("{\"mfs\":\"");
-  client.print(GetTimeFromStart());
-  client.print("\",\"temp\"=[");
-  printTemp(14, "s", client);
-  client.print("],\"photo\"=");
-  printPhoto(client);
-  client.print("}");
-  client.flush();
-  client.stop();
 }

@@ -1,6 +1,6 @@
 #include "CheeseDHT11.h"
 ESP8266WebServer httpServer(80);
-
+bool isOn=false;
 
 void httpProcess(){
     httpServer.handleClient();
@@ -42,9 +42,18 @@ void handleAdmin(){
   Serial.println("handleAdmin: "+html);
 }
 
+void handle220(){
+  isOn=!isOn;
+  String html="<html></body><b>SWITCH: "
+  +String(isOn?"<font color='red'>ON</font>":"<font color='green'>OFF</font>")+"</b></body></html>";
+  httpServer.send(200, "text/html", html);
+  Serial.println("handleAdmin: "+html);
+  digitalWrite(15, isOn?HIGH:LOW);  
+}
 void httpStart(){
   httpServer.on("/json", handleJson);
   httpServer.on("/admin", handleAdmin);
+  httpServer.on("/220", handle220);
   httpServer.onNotFound(handleNotFound);
 
   httpServer.begin();

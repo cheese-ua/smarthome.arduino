@@ -16,6 +16,7 @@ void setup() {
   init_secure();
   Serial.begin(115200);
   Serial.println("\nsetup: start");
+  pinMode(15, OUTPUT);
 
   Wire.begin(4, 5);
   lcd.init();

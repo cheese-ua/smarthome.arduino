@@ -12,10 +12,13 @@ void CheeseWiFi::init(CheeseLog* logger) {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     if (++cnt % 100 == 0)
-      logger->InfoNoLine("");
+      logger->InfoNoLine(".");
     logger->Info("");
   }
 
-  logger->Info("Our IP: "+WiFi.localIP());
+  char* buffer = new char[15];
+  IPAddress ip = WiFi.localIP();
+  sprintf(buffer, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+  logger->Info("Our IP: " + String(buffer));
   logger->Info("init_wifi: end");
 }

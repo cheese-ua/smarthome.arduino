@@ -1,25 +1,11 @@
 #include "CheeseUtilites.h"
 
-String CheeseUtilites::GetTimeFromStart() {
-  const int secHour = 3600;
-  const int secMin = 60;
-  int seconds = (float) millis() / 1000.0;
-  if (seconds > secHour) {
-    int hour = seconds / secHour;
-    seconds -= hour * secHour;
-    seconds -= hour * secMin;
-    int minute = seconds / secMin;
-    seconds -= minute * secMin;
-    return String(hour) + "h " + String(minute) + "m " + String(seconds) + "s";
-  } else if (seconds > secMin) {
-    int minute = seconds / secMin;
-    seconds -= minute * secMin;
-    return String(minute) + "m " + String(seconds) + "s";
-  }
-  return String(seconds) + "s";
+String CheeseUtilites::GetTimeFromStart_String() {
+  CheeseTime tm = CheeseUtilites::GetTimeFromStart_Struct();
+  return String(tm.day)+":"+String(tm.hour)+":"+String(tm.minute)+":"+String(tm.seconds);
 }
 
-CheeseTime CheeseUtilites::GetCheeseTimeFromStart() {
+CheeseTime CheeseUtilites::GetTimeFromStart_Struct() {
   const int msecSec = 1000;
   const int msecMin = 60 * msecSec;
   const int msecHour = msecMin * 60;

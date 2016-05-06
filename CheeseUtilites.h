@@ -11,8 +11,8 @@ struct CheeseTime {
 };
 class CheeseUtilites{
   public:
-    static String GetTimeFromStart();
-    static CheeseTime GetCheeseTimeFromStart();
+    static String GetTimeFromStart_String();
+    static CheeseTime GetTimeFromStart_Struct();
     static void PrintDHT11ToLCD16(LiquidCrystal_I2C lcd, int pin, int line, CheeseLog* logger);
 };
 #define CHEESEUTILITES

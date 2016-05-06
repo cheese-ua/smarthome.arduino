@@ -7,16 +7,18 @@ Cooler::Cooler(int pin, Schedule* schedules, int length, CheeseLog* logger) {
   this->length = length;
   this->logger = logger;
   pinMode(this->pin, OUTPUT);
-
-}
-void Cooler::CheckState() {
   isWorking = false;
 }
+void Cooler::CheckState() {
+  logger->Info("Check state");
+}
 void Cooler::Start() {
+  logger->Info("Cooler started");
   digitalWrite(pin, HIGH);
   isWorking = true;
 }
 void Cooler::Stop() {
+  logger->Info("Cooler stopped");
   digitalWrite(pin, LOW);
   isWorking = false;
 }

@@ -17,6 +17,7 @@ String GetTimeFromStart() {
   if(seconds>secHour){
     int hour = seconds/secHour;
     seconds-= hour*secHour;
+    seconds-= hour*secMin;
     int minute = seconds/secMin;
     seconds-= minute*secMin;
     return String(hour)+"h "+String(minute)+"m "+String(seconds)+"s";
@@ -50,6 +51,7 @@ CheeseTime GetCheeseTimeFromStart() {
 
   return {day, hour, minute, seconds, miliseconds};
 }
+
 
 void PrintDHT11ToLCD16(LiquidCrystal_I2C lcd, int pin, int line) {
   ResponseDHT11 resp = CheeseDHT11::get(pin);

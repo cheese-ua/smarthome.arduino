@@ -1,14 +1,9 @@
-/*
-   dht11.cpp
-
-    Created on: 2 ��� 2016
-        Author: cheese
-*/
-
-#include <SimpleDHT.h>
 #include "CheeseDHT11.h"
 
 SimpleDHT11 CheeseDHT11::dht11;
+CheeseDHT11::CheeseDHT11(CheeseLog* logger){
+  this->logger=logger;
+}
 
 ResponseDHT11 CheeseDHT11::get(int pin) {
   byte temperature;

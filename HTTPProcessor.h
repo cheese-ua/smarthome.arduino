@@ -11,7 +11,7 @@ void httpProcess() {
   httpServer.handleClient();
 }
 void handleJson() {
-  String message = "{\"mfs\":\"" +  GetTimeFromStart()
+  String message = "{\"mfs\":\"" +  CheeseUtilites::GetTimeFromStart()
                    +  "\",\n\"temp\"=[" +  CheeseDHT11::toJSON(14, "down")
                    + "," +  CheeseDHT11::toJSON(0, "up") +  "]}";
   httpServer.send(200, "application/json", message);
@@ -48,7 +48,7 @@ void handleAdmin() {
   html.replace("#set_light_state#", "");
   html.replace("#curr_light_state#", "");
   html.replace("#rows_dht11#", createRowDHT11(0) + createRowDHT11(14));
-  html.replace("#start_date#", GetTimeFromStart());
+  html.replace("#start_date#", CheeseUtilites::GetTimeFromStart());
   html.replace("#app_version#", "1.0.0.1");
 
   httpServer.send(200, "text/html", html);

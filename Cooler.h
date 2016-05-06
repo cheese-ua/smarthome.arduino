@@ -1,21 +1,23 @@
 #ifndef COOLER
-struct OneTime{
+#include "CheeseLog.h"
+struct OneTime {
   int hour;
   int minute;
 };
-struct Schedule{
+struct Schedule {
   OneTime from;
   OneTime to;
 };
 
-class Cooler{
+class Cooler {
   private:
     bool isWorking;
     int pin;
     Schedule* schedules;
     int length;
+    CheeseLog* logger;
   public:
-    Cooler(int pin, Schedule* schedules, int length);
+    Cooler(int pin, Schedule* schedules, int length, CheeseLog* logger);
     void CheckState();
     void Start();
     void Stop();

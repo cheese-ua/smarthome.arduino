@@ -1,7 +1,7 @@
 <html>
 <head>
 <style>
-table {font-size:20;border: 1px solid darkgray;background-color:#BCE0FF;opacity: 0.9;line-height:20px;padding:2px; width: 400px}
+table {font-size:20;border: 1px solid darkgray;background-color:#BCE0FF;opacity: 0.9;line-height:20px;padding:2px; width: 500px}
 thead {background-color: #4C86E2;border: 1px solid black;font-weight:bold;padding:3px;}
 a{
 font-weight:bold;
@@ -33,6 +33,14 @@ function SetLigthState(state){
 	xhttp.open("GET", "/set_cooler_state/"+state, true);
 	xhttp.send();
 }
+function pad_left(val, len, ch){
+	while((val+'').length<len)
+		val=ch+val;
+	return val;
+}
+function refresh() {
+	location.reload();
+}
 </script>
 </head>
 <body style='background-color:#E8F8FF'>
@@ -44,6 +52,7 @@ function SetLigthState(state){
 <thead><tr><td>Name</td><td >Value</td></tr></thead>
 <tr><td>Version</td><td>1.0.0.1</td></tr>
 <tr><td>Start time</td><td>1 day 4 hour 24 minutes</td></tr>
+<tr><td>Page refresh</td><td><p id='page_date'></p></td></tr>
 <tr><td>Cooler state</td><td>ON 1m 20s</td></tr>
 <tr><td>Light</td><td>OFF</td></tr>
 </table>
@@ -65,6 +74,12 @@ function SetLigthState(state){
 <br/>
 <br/>
 <a href='javascript:SetLigthState("off");'><<< Swith light on >>></a>
+
+<script type='text/javascript'>
+var pd = new Date();
+document.getElementById("page_date").innerHTML = pad_left(pd.getDate(),2,'0')+'.'+pad_left(pd.getMonth()+1,2,'0')+'.'+pd.getFullYear()+' '+pad_left(pd.getHours(),2,'0')+':'+pad_left(pd.getMinutes(),2,'0')+':'+pad_left(pd.getSeconds(),2,'0');
+setTimeout(refresh, 30000);
+</script>
 
 </center>
 </body>

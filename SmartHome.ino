@@ -24,11 +24,12 @@ void setup() {
   lcd.init();
   lcd.backlight();
   
-  httpStart();
-  CheeseWiFi::init();
-
   Schedule schedules[] = { {{10,10}, {10, 20}} };
   cooler = new Cooler(15, schedules, 1);
+
+  httpStart(cooler);
+  CheeseWiFi::init();
+
 }
 
 

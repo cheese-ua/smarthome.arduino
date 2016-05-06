@@ -18,6 +18,8 @@ class Cooler{
     void CheckState();
     void Start();
     void Stop();
+    bool IsWorking();
 };
+
 #define COOLER
 #endif

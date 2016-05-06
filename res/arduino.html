@@ -18,7 +18,7 @@ box-shadow:0 2px 2px #0E4088;
 <script type='text/javascript'>
 function SetCoolerState(state)
 {
-	if (!confirm("Set cooler state: "+(state?"ON":"OFF")+"?")) 
+	if (!confirm("Set cooler state: "+state+"?")) 
 		return;
 	alert('Start set state: '+state);
 	var xhttp = new XMLHttpRequest();
@@ -26,7 +26,7 @@ function SetCoolerState(state)
 	xhttp.send();
 }
 function SetLigthState(state){
-	if (!confirm("Start set light state: "+(state?"ON":"OFF")+"?")) 
+	if (!confirm("Start set light state: "+state+"?")) 
 		return;
 	alert('Set state: '+state);
 	var xhttp = new XMLHttpRequest();
@@ -50,30 +50,29 @@ function refresh() {
 
 <table>
 <thead><tr><td>Name</td><td >Value</td></tr></thead>
-<tr><td>Version</td><td>1.0.0.1</td></tr>
-<tr><td>Start time</td><td>1 day 4 hour 24 minutes</td></tr>
+<tr><td>Version</td><td>#app_version#</td></tr>
+<tr><td>Start time</td><td>#start_date#</td></tr>
 <tr><td>Page refresh</td><td><p id='page_date'></p></td></tr>
-<tr><td>Cooler state</td><td>ON 1m 20s</td></tr>
-<tr><td>Light</td><td>OFF</td></tr>
+<tr><td>Cooler state</td><td>#curr_cooler_state#</td></tr>
+<tr><td>Light</td><td>#curr_light_state#</td></tr>
 </table>
 
 <br/>
 
 <table>
 <thead><tr><td>Name</td><td style='width: 100px'>Temperature</td><td style='width: 100px'>Humidity</td></tr></thead>
-<tr><td>Garage</td><td>21 C</td><td>46%</td></tr>
-<tr><td>Cellar</td><td>22 C</td><td>49%</td></tr>
+#rows_dht11#
 </table>
 
 <br/>
 <br/>
 <br/>
 
-<a href='javascript:SetCoolerState("on");'><<< Start cooler >>></a>
+<a href='javascript:SetCoolerState("#set_cooler_state#");'>Set cooler state: #set_cooler_state#</a>
 <br/>
 <br/>
 <br/>
-<a href='javascript:SetLigthState("off");'><<< Swith light on >>></a>
+<a href='javascript:SetLigthState("#set_light_state#");'>Set light state: #set_light_state#</a>
 
 <script type='text/javascript'>
 var pd = new Date();

@@ -68,7 +68,7 @@ void httpStart(Cooler* cooler) {
   httpServer.on("/json", handleJson);
   httpServer.on("/admin", handleAdmin);
   httpServer.on("/set_cooler_state/on", set_cooler_state_on);
-  httpServer.on("/set_cooler_state/on", set_cooler_state_off);
+  httpServer.on("/set_cooler_state/off", set_cooler_state_off);
   httpServer.onNotFound(handleNotFound);
 
   httpServer.begin();

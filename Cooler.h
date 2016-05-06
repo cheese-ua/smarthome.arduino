@@ -10,6 +10,7 @@ struct Schedule{
 
 class Cooler{
   private:
+    bool isWorking;
     int pin;
     Schedule* schedules;
     int length;

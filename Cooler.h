@@ -21,7 +21,7 @@ class Cooler {
     bool IsNeedWorking();
     String ScheduleInfo(Schedule s);
   public:
-    Cooler(int pin, Schedule* schedules, int length, DS1302* rtc, CheeseLog* logger);
+    Cooler(int pin, DS1302* rtc, CheeseLog* logger);
     void CheckState();
     void Start();
     void Stop();

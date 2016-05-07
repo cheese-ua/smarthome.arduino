@@ -50,7 +50,7 @@ void handleAdmin() {
   html.replace("#curr_light_state#", "");
   html.replace("#rows_dht11#", createRowDHT11(0) + createRowDHT11(14));
   html.replace("#start_date#", CheeseUtilites::GetTimeFromStart_String());
-  html.replace("#app_version#", "1.0.0.1");
+  html.replace("#app_version#", "1.0.1.1");
   html.replace("#esp_date#", httpRTC->getDateStr()+String(" ") +httpRTC->getTimeStr());
 
   httpServer.send(200, "text/html", html);

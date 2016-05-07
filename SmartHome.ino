@@ -8,16 +8,17 @@
 #include <ESP8266WebServer.h>
 #include <LiquidCrystal_I2C.h>
 #include "Cooler.h"
+#include <DS1302.h>
 
 CheeseLog* logger;
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-
+DS1302 rtc(13, 12, 16);
 long counter = 0;
 Cooler *cooler;
 
 /***********************************************/
 void setup() {
-  logger = new CheeseLog();
+  logger = new CheeseLog(&rtc);
   
   init_secure();
 

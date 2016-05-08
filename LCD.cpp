@@ -30,9 +30,7 @@ void LCD::Update() {
   String line1 = BriefTemp(0, "G") + BriefTemp(14, "C");
   currentLCD.print(line1);
 
-  String strCooler = "CL: " + String(cooler->IsWorking() ? "ON" : "OFF");
-  String strLigth = "LT: " + String(false ? "ON" : "OFF");
-  String line2 = strCooler+" "+strLigth;
+  String line2 = "COOLER: " + String(cooler->IsWorking() ? "ON" : "OFF");
   while (line2.length() < 16)
     line2 += " ";
   currentLCD.setCursor(0, 1);

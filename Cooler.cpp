@@ -28,7 +28,7 @@ void Cooler::CheckState() {
   logger->Info("Cooler need work: " + String(needWork));
   if (needWork) {
     if (!isWorking)
-      Start();
+      Start(false);
   } else {
     if (isWorking)
       Stop();
@@ -41,6 +41,13 @@ String Cooler::ScheduleInfo(Schedule s) {
 }
 
 bool Cooler::IsNeedWorking() {
+  if (isManualStarted) {
+    int minutes = (millis() - startTime) / 60000;
+    if (minutes > 30) {
+      logger->Info("Manual start timeout");
+      return false;
+    }
+  }
   Time t = rtc->getTime();
   logger->Info("Curr hour: " + String(t.hour) + " min: " + String(t.min));
   for (int i = 0; i < length; i++) {
@@ -55,15 +62,19 @@ bool Cooler::IsNeedWorking() {
   return false;
 }
 
-void Cooler::Start() {
-  logger->Info("Cooler started");
+void Cooler::Start(bool isManual) {
+  logger->Info("Cooler started. Manual: " + String(isManual));
   digitalWrite(pin, HIGH);
   isWorking = true;
+  isManualStarted = isManual;
+  startTime = millis();
 }
 void Cooler::Stop() {
   logger->Info("Cooler stopped");
   digitalWrite(pin, LOW);
   isWorking = false;
+  isManualStarted = false;
+  startTime = 0;
 }
 bool Cooler::IsWorking() {
   return isWorking;

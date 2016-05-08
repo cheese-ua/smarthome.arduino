@@ -11,19 +11,21 @@ struct Schedule {
 };
 
 class Cooler {
-    private:
+  private:
     DS1302* rtc;
     bool isWorking;
     int pin;
     Schedule* schedules;
     int length;
     CheeseLog* logger;
+    bool isManualStarted;
+    long startTime;
     bool IsNeedWorking();
     String ScheduleInfo(Schedule s);
   public:
     Cooler(int pin, DS1302* rtc, CheeseLog* logger);
     void CheckState();
-    void Start();
+    void Start(bool isManual);
     void Stop();
     bool IsWorking();
 };

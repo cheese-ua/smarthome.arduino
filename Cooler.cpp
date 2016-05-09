@@ -49,10 +49,12 @@ String Cooler::ScheduleInfo(Schedule s) {
 bool Cooler::IsNeedWorking() {
   if (isManualStarted) {
     int minutes = (millis() - startMillis) / 60000;
+    logger->Info("Manual started: "+String(minutes)+" minutes");
     if (minutes > 30) {
       logger->Info("Manual start timeout");
       return false;
     }
+    return true;
   }
   Time t = rtc->getTime();
   logger->Info("Curr hour: " + String(t.hour) + " min: " + String(t.min));
@@ -69,7 +71,7 @@ bool Cooler::IsNeedWorking() {
 }
 
 void Cooler::Start(bool isManual) {
-  logger->Info("Cooler started. Manual: " + String(isManual));
+  logger->Info("Cooler started. Manual: " + String(isManual?"yes":"no"));
   digitalWrite(pin, HIGH);
   isWorking = true;
   isManualStarted = isManual;

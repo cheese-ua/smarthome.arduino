@@ -5,6 +5,7 @@
 #include <DS1302.h>
 class LCD {
   private:
+    long counter;
     CheeseLog* logger;
     DS1302* rtc;
     Cooler *cooler;

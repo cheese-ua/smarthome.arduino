@@ -27,18 +27,18 @@ void setup() {
   httpStart(cooler, &rtc);
   CheeseWiFi::init(logger);
   logger->Info("setup: end");
+  lcd->Update();
 }
 
 
 /***********************************************/
 void loop() {
   httpProcess();
-  if (++counter % 100 == 0) {
-    logger->Info("");
-    lcd->Update();
+  if (++counter % 1001 == 0) {
     cooler->CheckState();
-    delay(500);
-  } else {
-    delay(50);
+  } else if (++counter % 53 == 0) {
+    lcd->Update();
+  } else{
+    delay(100);
   }
 }

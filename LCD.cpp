@@ -12,6 +12,7 @@ LCD::LCD(Cooler *cooler, DS1302* rtc, CheeseLog* logger) {
   Wire.begin(4, 5);
   currentLCD.init();
   currentLCD.backlight();
+  counter = 0;
 }
 
 String LCD::BriefTemp(int pin, String Name) {
@@ -26,17 +27,33 @@ String LCD::BriefTemp(int pin, String Name) {
 }
 
 void LCD::Update() {
-  currentLCD.setCursor(0, 0);
-  String line1 = BriefTemp(0, "G") + BriefTemp(14, "C");
-  currentLCD.print(line1);
+  logger->Info("LCD update");
+  if ((++counter) % 3 != 0) {
+    currentLCD.setCursor(0, 0);
+    String line1 = BriefTemp(0, "G") + BriefTemp(14, "C");
+    currentLCD.print(line1);
 
-  String line2 = "COOLER: " + String(cooler->IsWorking() ? "ON" : "OFF");
-  while (line2.length() < 16)
-    line2 += " ";
-  currentLCD.setCursor(0, 1);
-  currentLCD.print(line2);
+    String line2 = "COOLER: " + String(cooler->IsWorking() ? "ON" : "OFF");
+    while (line2.length() < 16)
+      line2 += " ";
+    currentLCD.setCursor(0, 1);
+    currentLCD.print(line2);
+  } else {
+    String line1 = rtc->getDOWStr();
+    while (line1.length() < 16)
+      line1 += " ";
+    currentLCD.setCursor(0, 0);
+    currentLCD.print(line1);
+
+    String line2 = rtc->getDateStr() + String(" ") + rtc->getTimeStr();
+    while (line2.length() < 16)
+      line2 += " ";
+    currentLCD.setCursor(0, 1);
+    currentLCD.print(line2);
+  }
 }
-void LCD::PrintText(String txt){
+
+void LCD::PrintText(String txt) {
   currentLCD.setCursor(0, 0);
   currentLCD.print(txt);
 }

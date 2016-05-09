@@ -19,15 +19,18 @@ class Cooler {
     int length;
     CheeseLog* logger;
     bool isManualStarted;
-    long startTime;
+    long startMillis;
+    String startDate;
     bool IsNeedWorking();
     String ScheduleInfo(Schedule s);
+    Schedule CreateSchedule(int hourFrom, int minuteFrom, int hourTo, int minuteTo);
   public:
     Cooler(int pin, DS1302* rtc, CheeseLog* logger);
     void CheckState();
     void Start(bool isManual);
     void Stop();
     bool IsWorking();
+    String toJSON();
 };
 
 #define COOLER

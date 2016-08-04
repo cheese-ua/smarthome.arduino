@@ -21,8 +21,8 @@ void setup() {
   logger->Info("");
   logger->Info("setup: start");
   init_secure();
-  dhtUp = new CheeseDHT(0, "UP");
-  dhtDown = new CheeseDHT(14, "DOWN");
+  dhtUp = new CheeseDHT(2, "PIN 2");
+  dhtDown = new CheeseDHT(14, "PIN 14");
 
   cooler = new Cooler(15, &rtc, logger);
   lcd = new LCD(cooler, &rtc, dhtUp, dhtDown, logger);

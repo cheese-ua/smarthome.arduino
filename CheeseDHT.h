@@ -16,6 +16,7 @@ class CheeseDHT {
     String name;
     CheeseDHT(int pin, String name);
     ResponseDHT get();
+    static bool IsValidResponse(ResponseDHT resp);
     String toJSON();
 };
 #define CHEESEDHT

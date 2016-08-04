@@ -17,7 +17,7 @@ LCD::LCD(Cooler *cooler, DS1302* rtc, CheeseDHT *dhtUp, CheeseDHT *dhtDown, Chee
 
 String LCD::BriefTemp(CheeseDHT *dht, String Name) {
   ResponseDHT t = dht->get();
-  if (t.temperature < 0) {
+  if (!CheeseDHT::IsValidResponse(t)) {
     return Name + ": ERR  ";
   }
   String res = Name + ":" + String(t.temperature, DEC) + "#" + String(t.humidity, DEC);

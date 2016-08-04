@@ -16,10 +16,12 @@ ResponseDHT CheeseDHT::get() {
   ResponseDHT resp2 = {(int)t, (int)h, (int)hic};
   return resp2;
 }
-
+bool CheeseDHT::IsValidResponse(ResponseDHT resp){
+  return !isnan(resp.temperature) && resp.temperature<500 && !isnan(resp.humidity) && resp.humidity<500;
+}
 String CheeseDHT::toJSON() {
   ResponseDHT resp = get();
-  return isnan(resp.temperature)
+  return !IsValidResponse(resp)
          ? "{\"pin\":" + String(pin) + ",\"name\":\"" + name +  "\",\"error\":\"Read failed\"}"
          : "{\"pin\":" + String(pin) + ",\"name\":\"" +  name +  "\",\"t\":" + String(resp.temperature) + ",\"h\":" + String(resp.humidity) + ",\"idx\":" + String(resp.heat_index) + "}";
 }

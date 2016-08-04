@@ -12,6 +12,8 @@ long counter = 0;
 Cooler *cooler;
 LCD *lcd;
 DS1302 rtc(13, 12, 16);
+CheeseDHT *dhtUp;
+CheeseDHT *dhtDown;
 /***********************************************/
 void setup() {
 
@@ -19,10 +21,11 @@ void setup() {
   logger->Info("");
   logger->Info("setup: start");
   init_secure();
-
+  dhtUp = new CheeseDHT(0, "UP");
+  dhtDown = new CheeseDHT(14, "DOWN");
 
   cooler = new Cooler(15, &rtc, logger);
-  lcd = new LCD(cooler, &rtc, logger);
+  lcd = new LCD(cooler, &rtc, dhtUp, dhtDown, logger);
   lcd->PrintText("Loading...");
   httpStart(cooler, &rtc);
   CheeseWiFi::init(logger);
@@ -33,12 +36,12 @@ void setup() {
 
 /***********************************************/
 void loop() {
-  httpProcess();
+  httpProcess(dhtUp, dhtDown);
   if (++counter % 1001 == 0) {
     cooler->CheckState();
   } else if (++counter % 53 == 0) {
     lcd->Update();
-  } else{
+  } else {
     delay(100);
   }
 }

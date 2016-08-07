@@ -27,10 +27,11 @@ String LCD::BriefTemp(CheeseDHT *dht, String Name) {
 }
 
 void LCD::Update() {
-  logger->Info("LCD update");
-  if ((++counter) % 3 != 0) {
+  if ((++counter) % 2 != 0) {
+    logger->Info("LCD update - data");
+
     currentLCD.setCursor(0, 0);
-    String line1 = BriefTemp(dhtUp, "G") + BriefTemp(dhtDown, "C");
+    String line1 = BriefTemp(dhtUp, "U") + BriefTemp(dhtDown, "D");
     currentLCD.print(line1);
 
     String line2 = "COOLER: " + String(cooler->IsWorking() ? "ON" : "OFF");
@@ -39,6 +40,8 @@ void LCD::Update() {
     currentLCD.setCursor(0, 1);
     currentLCD.print(line2);
   } else {
+    logger->Info("LCD update - time");
+
     String line1 = rtc->getDOWStr();
     while (line1.length() < 16)
       line1 += " ";

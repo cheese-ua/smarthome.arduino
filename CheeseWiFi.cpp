@@ -25,3 +25,12 @@ void CheeseWiFi::init(CheeseLog* logger) {
   logger->Info("Our IP: " + String(buffer));
   logger->Info("init_wifi: end");
 }
+
+void CheeseWiFi::check(CheeseLog* logger) {
+  int status = WiFi.status();
+  logger->Info("WiFi status: " + String(status));
+  if (status == WL_CONNECTED)
+    return ;
+  logger->Info("WiFi restat ");
+  WiFi.reconnect();
+}

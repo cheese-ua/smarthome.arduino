@@ -7,6 +7,7 @@ class CheeseWiFi {
     static char* ssid ;
     static char* password ;
     static void init(CheeseLog* logger);
+    static void check(CheeseLog* logger);
 };
 #define CHEESEWIFI
 #endif

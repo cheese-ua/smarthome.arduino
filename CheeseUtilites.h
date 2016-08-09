@@ -2,7 +2,7 @@
 #ifndef CHEESEUTILITES
 #include "CheeseLog.h"
 
-struct CheeseTime {
+struct CheeseTimeInfo {
   int day;
   int hour;
   int minute;
@@ -12,7 +12,7 @@ struct CheeseTime {
 class CheeseUtilites{
   public:
     static String GetTimeFromStart_String();
-    static CheeseTime GetTimeFromStart_Struct();
+    static CheeseTimeInfo GetTimeFromStart_Struct();
 };
 #define CHEESEUTILITES
 #endif

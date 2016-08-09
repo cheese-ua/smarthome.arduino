@@ -1,9 +1,9 @@
 #include "CheeseDHT.h"
 #include "Cooler.h"
+#include "CheeseTime.h"
 ESP8266WebServer httpServer(80);
 bool isOn = false;
 Cooler* httpCooler;
-DS1302* httpRTC;
 String httStartTime = "";
 CheeseDHT *httpdhtUp;
 CheeseDHT *httpdhtDown;
@@ -19,7 +19,7 @@ void httpProcess(CheeseDHT *_dhtUp, CheeseDHT *_dhtDown) {
 }
 void handleJson() {
   String message = "{\"start_date\":\"" +  httStartTime
-                   +  "\",\"curr_date\":\"" +  httpRTC->getDateStr() + " " + httpRTC->getTimeStr()
+                   +  "\",\"curr_date\":\"" +  CheeseTime::Current()
                    +  "\",\n\"temp\"=[" +  httpdhtDown->toJSON()
                    + "," +  httpdhtUp->toJSON() +  "], \"cooler\":" + httpCooler->toJSON() + "}";
   httpServer.send(200, "application/json", message);
@@ -61,8 +61,8 @@ void handleAdmin() {
   html.replace("#set_cooler_state#", isCoolerWork ? "off" : "on");
   html.replace("#rows_dht11#", createRowDHT(httpdhtUp) + createRowDHT(httpdhtDown));
   html.replace("#start_date#", CheeseUtilites::GetTimeFromStart_String());
-  html.replace("#app_version#", "1.0.1.1");
-  html.replace("#esp_date#", httpRTC->getDateStr() + String(" ") + httpRTC->getTimeStr());
+  html.replace("#app_version#", "1.0.2.1");
+  html.replace("#esp_date#", CheeseTime::Current());
 
   httpServer.send(200, "text/html", html);
   Serial.println("handleAdmin: " + html);
@@ -76,10 +76,9 @@ void set_cooler_state_off() {
   httpCooler->Stop();
 }
 
-void httpStart(Cooler* cooler, DS1302* rtc) {
-  httpRTC = rtc;
+void httpStart(Cooler* cooler) {
   httpCooler = cooler;
-  httStartTime = rtc->getDateStr() + String(" ") + rtc->getTimeStr();
+  httStartTime = CheeseTime::Current();
   httpServer.on("/json", handleJson);
   httpServer.on("/admin", handleAdmin);
   httpServer.on("/favicon.ico", handleFavicon);

@@ -1,6 +1,5 @@
 #ifndef COOLER
 #include "CheeseLog.h"
-#include <DS1302.h>
 struct OneTime {
   int hour;
   int minute;
@@ -12,7 +11,6 @@ struct Schedule {
 
 class Cooler {
   private:
-    DS1302* rtc;
     bool isWorking;
     int pin;
     Schedule* schedules;
@@ -25,7 +23,7 @@ class Cooler {
     String ScheduleInfo(Schedule s);
     Schedule CreateSchedule(int hourFrom, int minuteFrom, int hourTo, int minuteTo);
   public:
-    Cooler(int pin, DS1302* rtc, CheeseLog* logger);
+    Cooler(int pin, CheeseLog* logger);
     void CheckState();
     void Start(bool isManual);
     void Stop();

@@ -1,11 +1,11 @@
 #include "CheeseLog.h"
+#include "CheeseTime.h"
 #include "CheeseUtilites.h"
-CheeseLog::CheeseLog(DS1302* rtc){
+CheeseLog::CheeseLog(){
     Serial.begin(115200);
-    this->rtc = rtc;
 }
 void CheeseLog::Info(String line) {
-  Serial.println(rtc->getDateStr()+String(" ") +rtc->getTimeStr() + String(" ") + line);
+  Serial.println(CheeseTime::Current() + String(" ") + line);
 }
 void CheeseLog::InfoNoLine(String line) {
   Serial.print(line);

@@ -1,11 +1,10 @@
 #include "LCD.h"
 #include <Wire.h>
-
+#include "CheeseTime.h"
 LiquidCrystal_I2C currentLCD(0x27, 16, 2);
 
-LCD::LCD(Cooler *cooler, DS1302* rtc, CheeseDHT *dhtUp, CheeseDHT *dhtDown, CheeseLog* logger) {
+LCD::LCD(Cooler *cooler, CheeseDHT *dhtUp, CheeseDHT *dhtDown, CheeseLog* logger) {
   this->cooler = cooler;
-  this->rtc = rtc;
   this->logger = logger;
   this->dhtUp = dhtUp;
   this->dhtDown = dhtDown;
@@ -42,13 +41,13 @@ void LCD::Update() {
   } else {
     logger->Info("LCD update - time");
 
-    String line1 = rtc->getDOWStr();
+    String line1 = CheeseTime::DayOfWeek();
     while (line1.length() < 16)
       line1 += " ";
     currentLCD.setCursor(0, 0);
     currentLCD.print(line1);
 
-    String line2 = rtc->getDateStr() + String(" ") + rtc->getTimeStr();
+    String line2 = CheeseTime::Current();
     while (line2.length() < 16)
       line2 += " ";
     currentLCD.setCursor(0, 1);

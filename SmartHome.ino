@@ -5,57 +5,57 @@
 #include "HTTPProcessor.h"
 #include "Cooler.h"
 #include "LCD.h"
-#include <DS1302.h>
 
 CheeseLog* logger;
 long counter = 0;
 Cooler *cooler;
 LCD *lcd;
 
-DS1302 rtc(13, 12, 16); //(rst, dat, clk);
 CheeseDHT *dhtUp;
 CheeseDHT *dhtDown;
-long secPrevLCD=0;
-long secPrevCooler=0;
+long secPrevLCD = 0;
+long secPrevCooler = 0;
 /***********************************************/
 void setup() {
 
-  logger = new CheeseLog(&rtc);
+  logger = new CheeseLog();
   logger->Info("");
   logger->Info("setup: start");
   init_secure();
   dhtUp = new CheeseDHT(2, "UP");
   dhtDown = new CheeseDHT(14, "DOWN");
 
-  cooler = new Cooler(15, &rtc, logger);
-  lcd = new LCD(cooler, &rtc, dhtUp, dhtDown, logger);
+  cooler = new Cooler(15, logger);
+  lcd = new LCD(cooler, dhtUp, dhtDown, logger);
   lcd->PrintText("Loading...");
-  httpStart(cooler, &rtc);
+  httpStart(cooler);
   CheeseWiFi::init(logger);
   logger->Info("setup: end");
   lcd->Update();
-  secPrevLCD=millis()/1000;
-  secPrevCooler=millis()/1000;
+  secPrevLCD = millis() / 1000;
+  secPrevCooler = millis() / 1000;
 }
 
 
 /***********************************************/
 void loop() {
-  
+
   httpProcess(dhtUp, dhtDown);
 
-  long secCurrLCD=millis()/1000;
-  long secCurrCooler=millis()/1000;
+  long secCurrLCD = millis() / 1000;
+  long secCurrCooler = millis() / 1000;
 
-  if(secCurrLCD-secPrevLCD>5)  {
+  if (secCurrLCD - secPrevLCD > 3)  {
     lcd->Update();
     secPrevLCD = secCurrLCD;
   }
 
-  if(secCurrCooler-secPrevCooler>30)  {
+  if (secCurrCooler - secPrevCooler > 30)  {
     cooler->CheckState();
     secPrevCooler = secCurrCooler;
+    CheeseWiFi::check(logger);
   }
+
 
   delay(100);
 }

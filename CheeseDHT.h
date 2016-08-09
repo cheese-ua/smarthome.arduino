@@ -5,12 +5,14 @@ struct ResponseDHT {
   int temperature;
   int humidity;
   int heat_index;
+  String date;
 };
 
 
 class CheeseDHT {
   private:
     DHT *dht;
+    ResponseDHT respPrevious;
   public:
     int pin;
     String name;

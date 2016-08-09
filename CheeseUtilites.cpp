@@ -1,11 +1,11 @@
 #include "CheeseUtilites.h"
 
 String CheeseUtilites::GetTimeFromStart_String() {
-  CheeseTime tm = CheeseUtilites::GetTimeFromStart_Struct();
+  CheeseTimeInfo tm = CheeseUtilites::GetTimeFromStart_Struct();
   return String(tm.day)+":"+String(tm.hour)+":"+String(tm.minute)+":"+String(tm.seconds);
 }
 
-CheeseTime CheeseUtilites::GetTimeFromStart_Struct() {
+CheeseTimeInfo CheeseUtilites::GetTimeFromStart_Struct() {
   const int msecSec = 1000;
   const int msecMin = 60 * msecSec;
   const int msecHour = msecMin * 60;

@@ -1,13 +1,13 @@
 #include "Arduino.h"
 #include "Cooler.h"
+#include "CheeseTime.h"
 
-Cooler::Cooler(int pin, DS1302* rtc, CheeseLog* logger) {
+Cooler::Cooler(int pin, CheeseLog* logger) {
   this->pin = pin;
   this->logger = logger;
   pinMode(this->pin, OUTPUT);
   isWorking = false;
-  this->rtc = rtc;
-
+  isManualStarted = false;
   length = 12;
   schedules = new Schedule[length];
   schedules[0] = CreateSchedule(1, 0, 1, 15);
@@ -22,7 +22,7 @@ Cooler::Cooler(int pin, DS1302* rtc, CheeseLog* logger) {
   schedules[9] = CreateSchedule(19, 0, 19, 15);
   schedules[10] = CreateSchedule(21, 0, 21, 15);
   schedules[11] = CreateSchedule(23, 0, 21, 15);
-  
+
 }
 Schedule Cooler::CreateSchedule(int hourFrom, int minuteFrom, int hourTo, int minuteTo) {
   OneTime tf1 = {hourFrom, minuteFrom};
@@ -49,14 +49,14 @@ String Cooler::ScheduleInfo(Schedule s) {
 bool Cooler::IsNeedWorking() {
   if (isManualStarted) {
     int minutes = (millis() - startMillis) / 60000;
-    logger->Info("Manual started: "+String(minutes)+" minutes");
+    logger->Info("Manual started: " + String(minutes) + " minutes");
     if (minutes > 30) {
       logger->Info("Manual start timeout");
       return false;
     }
     return true;
   }
-  Time t = rtc->getTime();
+  Time t = CheeseTime::getTime();
   logger->Info("Curr hour: " + String(t.hour) + " min: " + String(t.min));
   for (int i = 0; i < length; i++) {
     Schedule s = schedules[i];
@@ -71,12 +71,12 @@ bool Cooler::IsNeedWorking() {
 }
 
 void Cooler::Start(bool isManual) {
-  logger->Info("Cooler started. Manual: " + String(isManual?"yes":"no"));
+  logger->Info("Cooler started. Manual: " + String(isManual ? "yes" : "no"));
   digitalWrite(pin, HIGH);
   isWorking = true;
   isManualStarted = isManual;
   startMillis = millis();
-  startDate = rtc->getDateStr()+String(" ") +rtc->getTimeStr();
+  startDate = CheeseTime::Current();
 }
 void Cooler::Stop() {
   logger->Info("Cooler stopped");
@@ -90,10 +90,10 @@ bool Cooler::IsWorking() {
   return isWorking;
 }
 
-String Cooler::toJSON(){
-  if(!IsWorking()){
+String Cooler::toJSON() {
+  if (!IsWorking()) {
     return "{\"working\":\"false\"}";
   }
-  return "{\"working\":\"true\", \"start_date\":\""+startDate+"\"}";
+  return "{\"working\":\"true\", \"start_date\":\"" + startDate + "\"}";
 }
 

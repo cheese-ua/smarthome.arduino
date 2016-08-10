@@ -1,7 +1,9 @@
+#ifndef CHEESEWIFI
+
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include "CheeseLog.h"
-#ifndef CHEESEWIFI
+
 class CheeseWiFi {
   public:
     static char* ssid ;

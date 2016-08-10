@@ -1,4 +1,3 @@
-#include <LiquidCrystal_I2C.h>
 #ifndef CHEESEUTILITES
 #include "CheeseLog.h"
 

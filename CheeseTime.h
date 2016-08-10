@@ -1,4 +1,8 @@
 #ifndef CHEESETIME
+/*
+DS1302 rtc(rst, dat, clk);
+*/
+
 #include "Arduino.h"
 #include <DS1302.h>
 class CheeseTime {
